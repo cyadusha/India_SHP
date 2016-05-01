@@ -52,7 +52,8 @@ dat.india$GINI = ((dat.india$RuralGini)*(dat.india$PercentageRural) + (dat.india
 Now, we download the worldbank data and subset it so that it will include GINI coefficients only for 2005 and 2013. Because the GINI coefficient for 2005 for India is missing, the idea of the previous chunk was to scrape the urban and rural GINI coefficients for India and compute the weighted GINI coefficient and replace the NA for 2005 for India with that value.
 
 ```{r}
-worlddata = subset(read.csv("/Users/chittampalliyashaswini/Desktop/Yadu/Data_Extract_From_World_Development_Indicators/worlddata.csv", sep = ","), select = c(Country.Name, X2005, X2013))
+library(RCurl)
+worlddata = subset(read.csv(text = getURL("https://raw.githubusercontent.com/cyadusha/Data_Extract_From_World_Development_Indicators/master/worlddata.csv"), sep = ","), select = c(Country.Name, X2005, X2013))
 colnames(worlddata)[2] = "2005GINI"
 colnames(worlddata)[3] = "2013GINI"
 worlddata = worlddata[1:214,]
@@ -75,13 +76,14 @@ mapCountryData(n, nameColumnToPlot="2013GINI", mapTitle="World 2013")
 Now, we read in the shapefile for India and plot the map of India and color each province according to its GINI coefficient. 
 
 ```{r}
+library(classInt)
 gpclibPermit()
 gpclibPermitStatus()
 map.ind.regions1 = readShapePoly("/Users/chittampalliyashaswini/Desktop/Yadu/IND_adm_shp/IND_adm1.shp", proj4string=CRS("+proj=longlat +datum=NAD27"))
-map.india = fortify(map.ind.regions1, region = "NAME_1")
-map.india = rename(map.india,x=long,y=lat)
+map.ind.regions1 = fortify(map.ind.regions1, region = "NAME_1")
+map.ind.regions1 = rename(map.ind.regions1,x=long,y=lat)
 mycolors = brewer.pal(9,"BrBG")
-ggplot(data=dat.india.province) + geom_map(aes(fill=GINI, map_id=region),map=map.india) + expand_limits(map.india) + theme_bw() + scale_fill_gradientn(name="Coverage", colours = mycolors)
+ggplot(data=dat.india.province) + geom_map(aes(fill=GINI, map_id=region),map=map.ind.regions1) + expand_limits(map.ind.regions1) + theme_bw() + scale_fill_gradientn(name="Coverage", colours = mycolors)
 ```
 
 http://databank.worldbank.org/data/reports.aspx?Code=SI.POV.GINI&id=af3ce82b&report_name=Popular_indicators&populartype=series&ispopular=y

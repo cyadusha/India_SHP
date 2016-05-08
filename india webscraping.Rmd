@@ -24,7 +24,7 @@ Next, the provincial data for the GINI coefficient of India is scraped as follow
 ```{r}
 dat.india.province = subset(fromJSON("http://knoema.com/api/1.0/data/wiwuiff?Time=2005-2005&region=1000130,1000020,1000040,1000050,1000060,1000080,1000090,1000100,1000110,1000120,1000140,1000150,1000160,1000220,1000210,1000230,1000290,1000280,1000270,1000250&variable=1000130,1000140,1000070,1000080&Frequencies=A")$data, select = -c(Unit, Time, RegionId, Frequency, Scale))
 dat.india.province = data.frame(spread(dat.india.province, variable, Value))
-colnames(dat.india.province)[2:5] = c("PercentageRural", "PercentageUrban", "RuralGini", "UrbanGini")
+colnames(dat.india.province)[2:5] = c("Ruralization (Percentage)", "Urbanization (Percentage)", "RuralGini", "UrbanGini")
 dat.india.province$region[8] = "Jammu and Kashmir"
 dat.india.province$region[14] = "Odisha"
 ```
@@ -32,14 +32,20 @@ dat.india.province$region[14] = "Odisha"
 Because this dataset does not include any information for Telangana, which was formed only recently, we can just subset the data so that we get data only for the province of Andhra Pradesh and just apply it to Telangana and then order the states in alphabetic order.
 
 ```{r}
-dat.india.province = rbind(dat.india.province, data.frame(region = 'Telangana', subset(dat.india.province, region == "Andhra Pradesh", select = -c(region))))
+dat.telangana = data.frame(region = 'Telangana', subset(dat.india.province, region == "Andhra Pradesh", select = -c(region)))
+colnames(dat.telangana) = colnames(dat.india.province)
+dat.india.province = rbind(dat.india.province, dat.telangana)
 dat.india.province = dat.india.province[order(dat.india.province$region),]
 ```
 
 Now, for each province, we compute the GINI coefficient by weighting the rural GINI coefficient with the percentage of the rural population and the urban GINI coefficient with the percentage of the urban population.
 
 ```{r}
-dat.india.province$GINI = ((dat.india.province$RuralGini)*(dat.india.province$PercentageRural) + (dat.india.province$UrbanGini)*(dat.india.province$PercentageUrban))/100
+dat.india.province$GINI = ((dat.india.province$RuralGini)*(dat.india.province$Ruralization) + (dat.india.province$UrbanGini)*(dat.india.province$Urbanization))/100
+```
+
+```{r}
+ggplot(dat.india.province, aes(x = `Urbanization (Percentage)`, y = GINI)) + geom_point(color = "red") + geom_smooth(method = "lm")
 ```
 
 ```{r}

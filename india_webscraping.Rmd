@@ -54,12 +54,6 @@ summary(lm(GINI ~ `Urbanization (Percentage)`, data = dat.india.province))
 ```
 
 ```{r}
-ggplot(dat.india.province, aes(x = `Ruralization (Percentage)`, y = GINI)) + geom_point(color = "red") + geom_smooth(method = "lm")
-lm(GINI ~ `Ruralization (Percentage)`, data = dat.india.province)
-summary(lm(GINI ~ `Ruralization (Percentage)`, data = dat.india.province))
-```
-
-```{r}
 dat.india.province1974 = subset(fromJSON("https://knoema.com/api/1.0/data/wiwuiff?Time=1974-1974&region=1000130,1000020,1000030,1000040,1000050,1000060,1000070,1000080,1000090,1000100,1000110,1000120,1000140,1000150,1000160,1000170,1000180,1000190,1000200,1000210,1000220,1000230,1000240,1000250,1000260,1000270,1000280,1000290&variable=1000070,1000080,1000140,1000130&Frequencies=A")$data, select = c(variable, region, Value))
 dat.india.province1974 = data.frame(spread(dat.india.province1974, variable, Value))
 dat.india.province1974$region[7] = "Jammu and Kashmir"
@@ -105,13 +99,13 @@ map.ind.regions1 = rename(map.ind.regions1,x=long,y=lat)
 library(grid)
 library(gridExtra)
 mycolors = brewer.pal(9,"BrBG")
-plot1 = ggplot(data=dat.india.province) + geom_map(aes(fill=GINI, map_id=region),map=map.ind.regions1) + expand_limits(map.ind.regions1) + coord_map("polyconic") + theme_bw() + scale_fill_gradientn(name="GINI", colours = mycolors) + theme(legend.justification=c(1,0),legend.position=c(1,0),legend.background=element_rect(colour="black"))
+plot1 = ggplot(data=dat.india.province) + geom_map(aes(fill=GINI, map_id=region),map=map.ind.regions1) + expand_limits(map.ind.regions1) + theme_bw() + guides(fill=guide_legend(title="GINI",nrow=3,title.position="top",legend.key.width = unit(1, "cm"), title.hjust=0.5,title.theme=element_text(face="bold",angle=0))) + scale_fill_gradientn(name="Coverage", colours = mycolors) + coord_map("polyconic")
 
 mycolors2 = brewer.pal(9,"OrRd")
-plot2 = ggplot(data=dat.india.provincecomp) + geom_map(aes(fill=`Rural Gini Coefficient Percent Change`, map_id=region),map=map.ind.regions1) + expand_limits(map.ind.regions1) + coord_map("polyconic") + theme_bw() + scale_fill_gradientn(name="Rural GINI % Change", colours = mycolors) + theme(legend.justification=c(1,0),legend.position=c(1,0),legend.background=element_rect(colour="black"))
+plot2 = ggplot(data=dat.india.provincecomp) + geom_map(aes(fill=`Rural Gini Coefficient Percent Change`, map_id=region),map=map.ind.regions1) + expand_limits(map.ind.regions1) + theme_bw() + guides(fill=guide_legend(title="Rural GINI % Change",nrow=3,title.position="top",legend.key.width = unit(1, "cm"), title.hjust=0.5,title.theme=element_text(face="bold",angle=0))) + scale_fill_gradientn(name="Coverage", colours = mycolors2)
 
 mycolors3 = brewer.pal(9,"Blues")
-plot3 = ggplot(data=dat.india.provincecomp) + geom_map(aes(fill=`Urban Gini Coefficient Percent Change`, map_id=region),map=map.ind.regions1) + expand_limits(map.ind.regions1) + coord_map("polyconic") + theme_bw() + scale_fill_gradientn(name="Urban GINI % Change", colours = mycolors) + theme(legend.justification=c(1,0),legend.position=c(1,0),legend.background=element_rect(colour="black"))
+plot3 = ggplot(data=dat.india.provincecomp) + geom_map(aes(fill=`Urban Gini Coefficient Percent Change`, map_id=region),map=map.ind.regions1) + expand_limits(map.ind.regions1) + theme_bw() + guides(fill=guide_legend(title="Urban GINI % Change",nrow=3,title.position="top",legend.key.width = unit(1, "cm"), title.hjust=0.5,title.theme=element_text(face="bold",angle=0))) + scale_fill_gradientn(name="Coverage", colours = mycolors3)
 
 grid.arrange(plot1, plot2, plot3, top = textGrob("Maps of India", gp = gpar(fontface = "bold")), ncol = 1, nrow = 3)
 ```

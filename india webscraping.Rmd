@@ -108,10 +108,10 @@ mycolors = brewer.pal(9,"BrBG")
 plot1 = ggplot(data=dat.india.province) + geom_map(aes(fill=GINI, map_id=region),map=map.ind.regions1) + expand_limits(map.ind.regions1) + coord_map("polyconic") + theme_bw() + scale_fill_gradientn(name="GINI", colours = mycolors) + theme(legend.justification=c(1,0),legend.position=c(1,0),legend.background=element_rect(colour="black"))
 
 mycolors2 = brewer.pal(9,"OrRd")
-plot2 = ggplot(data=dat.india.provincecomp) + geom_map(aes(fill=`Rural Gini Coefficient Percent Change`, map_id=region),map=map.ind.regions1) + expand_limits(map.ind.regions1) + coord_map("polyconic") + theme_bw() + scale_fill_gradientn(name="Rural GINI % Change", colours = mycolors) + theme(legend.justification=c(1,0),legend.position=c(1,0),legend.background=element_rect(colour="black"))
+plot2 = ggplot(data=dat.india.provincecomp) + geom_map(aes(fill=`Rural Gini Coefficient Percent Change`, map_id=region),map=map.ind.regions1) + expand_limits(map.ind.regions1) + coord_map("polyconic") + theme_bw() + scale_fill_gradientn(name="Rural GINI % Change", colours = mycolors2) + theme(legend.justification=c(1,0),legend.position=c(1,0),legend.background=element_rect(colour="black"))
 
 mycolors3 = brewer.pal(9,"Blues")
-plot3 = ggplot(data=dat.india.provincecomp) + geom_map(aes(fill=`Urban Gini Coefficient Percent Change`, map_id=region),map=map.ind.regions1) + expand_limits(map.ind.regions1) + coord_map("polyconic") + theme_bw() + scale_fill_gradientn(name="Urban GINI % Change", colours = mycolors) + theme(legend.justification=c(1,0),legend.position=c(1,0),legend.background=element_rect(colour="black"))
+plot3 = ggplot(data=dat.india.provincecomp) + geom_map(aes(fill=`Urban Gini Coefficient Percent Change`, map_id=region),map=map.ind.regions1) + expand_limits(map.ind.regions1) + coord_map("polyconic") + theme_bw() + scale_fill_gradientn(name="Urban GINI % Change", colours = mycolors3) + theme(legend.justification=c(1,0),legend.position=c(1,0),legend.background=element_rect(colour="black"))
 
 grid.arrange(plot1, plot2, plot3, top = textGrob("Maps of India", gp = gpar(fontface = "bold")), ncol = 1, nrow = 3)
 ```

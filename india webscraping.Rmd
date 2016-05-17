@@ -45,12 +45,18 @@ Now, for each province, we compute the GINI coefficient by weighting the rural G
 dat.india.province$GINI = ((dat.india.province$RuralGini)*(dat.india.province$Ruralization) + (dat.india.province$UrbanGini)*(dat.india.province$Urbanization))/100
 ```
 
-The following is a linear correlation plot between urbanization and GINI coefficient for each province. 
+The following are linear correlation plots between urbanization and GINI coefficient and ruralization and GINI coefficient for each province. 
 
 ```{r}
 ggplot(dat.india.province, aes(x = `Urbanization (Percentage)`, y = GINI)) + geom_point(color = "red") + geom_smooth(method = "lm")
 lm(GINI ~ `Urbanization (Percentage)`, data = dat.india.province)
 summary(lm(GINI ~ `Urbanization (Percentage)`, data = dat.india.province))
+```
+
+```{r}
+ggplot(dat.india.province, aes(x = `Ruralization (Percentage)`, y = GINI)) + geom_point(color = "red") + geom_smooth(method = "lm")
+lm(GINI ~ `Ruralization (Percentage)`, data = dat.india.province)
+summary(lm(GINI ~ `Ruralization (Percentage)`, data = dat.india.province))
 ```
 
 ```{r}
